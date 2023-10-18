@@ -1,0 +1,34 @@
+syntax = "proto3";
+
+
+// 指定包名
+package pb;
+
+
+option go_package="./;pb";
+
+
+// Stock 股票信息组成
+message Stock {
+  string Name = 1;              // 股票名称
+  float  Price = 2;             // 最新价格
+  int64  TradingVolume = 3;     // 成交量
+  float  IncrOrDecrAmount = 4;  // 涨跌额
+  float  IncrOrDecrRate = 5;    // 涨跌率
+  int64  Timestamp = 6;         // 时间戳
+}
+
+// StockReq 获取股票信息请求体
+message StockReq {
+  int64 StockId = 1;  // 股票ID
+}
+
+// StockResp 返回股票具体信息
+message StockResp {
+  Stock Data = 1;
+}
+
+service StockService {
+  // GetStockById 持续获取股票信息
+  rpc GetStockById (StockReq) returns (stream StockResp);
+}
