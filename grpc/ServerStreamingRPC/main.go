@@ -25,11 +25,11 @@ func (s *stock) computeStock(amount float32, timing time.Time) {
 	s.mutex.Lock()
 	defer s.mutex.Unlock()
 	// 计算涨跌额度
-	s.IncrOrDecrAmount = s.Price - amount
+	s.IncrOrDecrAmount = amount
 	// 计算涨跌率
-	s.IncrOrDecrRate = (s.Price - amount) / s.Price
+	s.IncrOrDecrRate = (s.Price + amount) / s.Price
 	// 计算最新价格
-	s.Price = amount
+	s.Price += amount
 	// 成交率
 	s.TradingVolume++
 	// 时间戳
@@ -104,8 +104,8 @@ func main() {
 				for _, v := range StockManager.stocks {
 					// 随机主题 0 为正值 1 为负值
 					randTeam := rand.Intn(2)
-					// 随机amount 股票便宜值
-					randAmount := rand.Float32()
+					// 随机amount 股票偏移值，每次取 [0 - 0.01)
+					randAmount := rand.Float32() / 10
 					if randTeam == 1 {
 						randAmount = -randAmount
 					}
